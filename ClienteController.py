@@ -22,8 +22,17 @@ class ClienteController:
                 #FIX ME - implementar lógica de cadastro
                 pass
             elif event == 'Consultar':
-                #FIX ME - implementar lógica de consulta
-                pass
+                try:
+                    codigo, nome = self.verifica_valores(*values)
+                    try:
+                        resultado = self.busca_codigo(codigo)
+                    except:
+                        try:
+                            resultado = self.busca_nome(nome)
+                        except:
+                            resultado = 'Cliente nao encontrado'
+                except:
+                    resultado = 'Os valores inseridos estao incorretos'                
             
             if resultado != '':
                 dados = str(resultado)
@@ -50,10 +59,10 @@ class ClienteController:
         raise LookupError
 
     def verifica_valores(codigo, nome):
-        if nome.isalpha():
-            try:
-                return int(codigo), nome
-            except:
+        if codigo != '':
+            try: codigo = int(codigo)
+            except: raise ValueError
+        if nome != '':
+            if not nome.isalpha():
                 raise ValueError
-        else:
-            raise ValueError
+        return codigo, nome
