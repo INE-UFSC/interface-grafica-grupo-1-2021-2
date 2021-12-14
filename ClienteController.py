@@ -48,3 +48,12 @@ class ClienteController:
                 return key 
 
         raise LookupError
+
+    def verifica_valores(codigo, nome):
+        if nome.isalpha():
+            try:
+                return int(codigo), nome
+            except:
+                raise ValueError
+        else:
+            raise ValueError
