@@ -19,8 +19,11 @@ class ClienteController:
             if event == sg.WIN_CLOSED:
                 rodando = False
             elif event == 'Cadastrar':
-                #FIX ME - implementar lógica de cadastro
-                pass
+                try:
+                    self.adiciona_cliente(self.verifica_valores(values))
+                    resultado = 'Cliente cadastrado com sucesso!'
+                except:
+                    resultado = '"Código" deve ser um inteiro e "Nome" deve conter apenas letras.'
             elif event == 'Consultar':
                 try:
                     codigo, nome = self.verifica_valores(*values)
