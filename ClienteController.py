@@ -20,13 +20,19 @@ class ClienteController:
                 rodando = False
             elif event == 'Cadastrar':
                 try:
-                    self.adiciona_cliente(self.verifica_valores(values))
+                    codigo, nome = self.verifica_valores(values)
+                    if nome == '' or codigo == '': raise ValueError                
+                    for key in self.__clientes.keys():
+                        if codigo == key:
+                            print('codigo ja existe')
+                            raise ValueError
+                    self.adiciona_cliente(codigo, nome)
                     resultado = 'Cliente cadastrado com sucesso!'
                 except:
-                    resultado = '"Código" deve ser um inteiro e "Nome" deve conter apenas letras.'
+                    resultado = '"Código" deve ser único e um inteiro, e "Nome" deve conter apenas letras.'
             elif event == 'Consultar':
                 try:
-                    codigo, nome = self.verifica_valores(*values)
+                    codigo, nome = self.verifica_valores(values)
                     try:
                         resultado = self.busca_codigo(codigo)
                     except:
@@ -35,7 +41,7 @@ class ClienteController:
                         except:
                             resultado = 'Cliente nao encontrado'
                 except:
-                    resultado = 'Os valores inseridos estao incorretos'                
+                    resultado = '"Código" deve ser um inteiro, e "Nome" deve conter apenas letras.'            
             
             if resultado != '':
                 dados = str(resultado)
@@ -57,15 +63,15 @@ class ClienteController:
     def busca_nome(self, nome):
         for key, val in self.__clientes.items():
             if val.nome == nome:
-                return key 
+                return self.__clientes[key]
 
         raise LookupError
 
-    def verifica_valores(codigo, nome):
+    def verifica_valores(self, valores):
+        nome, codigo = valores['Nome'], valores['Código']
         if codigo != '':
             try: codigo = int(codigo)
-            except: raise ValueError
-        if nome != '':
-            if not nome.isalpha():
+            except:
+                print('erro codigo nao int')
                 raise ValueError
         return codigo, nome
